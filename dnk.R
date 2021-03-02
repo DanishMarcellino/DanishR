@@ -1,6 +1,10 @@
+install.packages("lmtest")
+
 rm(list=ls())
 library(OECD)
 library(ggplot2)
+library(lmtest)
+
 inflation_data=get_dataset("KEI", filter="CP+CPALTT01.DNK.GP.A", start_time=1983, end_time=(2019))
 unemployment_data=get_dataset("STLABOUR", filter="DNK.LRHUTTFE+LRHUTTTT.ST.A", start_time=1983, end_time=(2019))
 
@@ -19,4 +23,12 @@ model <- lm(inflation ~ unemployment+inflation_previous_period)
 res <- resid(model)
 plot(model)
 
+# Heteroscedasticity tests:
 gqtest(model)
+bptest(model)
+
+# Error correlation tests:
+dwtest(model)
+
+# Test for linearity:
+reset(model)
