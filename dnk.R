@@ -13,3 +13,10 @@ summary(lm(difference ~ unemployment))
 e=ggplot(data=NULL,aes(x=unemployment,y=difference))
 e+geom_point()
 e+geom_point()+geom_smooth(method=lm, se=FALSE)
+summary(lm(inflation ~ unemployment+inflation_previous_period))
+
+model <- lm(inflation ~ unemployment+inflation_previous_period)
+res <- resid(model)
+plot(model)
+
+gqtest(model)
