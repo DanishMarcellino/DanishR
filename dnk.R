@@ -21,6 +21,7 @@ summary(lm(inflation ~ unemployment+inflation_previous_period))
 
 model <- lm(inflation ~ unemployment+inflation_previous_period)
 res <- resid(model)
+variance_hat = sum(res**2)/(length(res)-3)
 plot(model)
 
 # Heteroscedasticity tests:
