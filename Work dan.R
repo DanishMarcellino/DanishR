@@ -69,6 +69,13 @@ gqtest(model)
 #In this case we got a p-value of 0.2126 so we can conclude that variances are indeed homoscedastic. 
 bptest(model)
 
+#Is residuals mean equal zero?
+
+#As we can see from the following calculation the mean of the residuals is approximately zero, which is 
+#correct for the OLS model
+(residuals<-resid(model))
+(mean(residuals))
+
 # Error correlation tests:
 
 #The Durbin Watson test has the null hypothesis (H0) that the autocorrelation of the residuals is 0,
