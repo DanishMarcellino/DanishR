@@ -28,17 +28,26 @@ un=(protection+markup) #natural rate of unemployment (off by a constant alpha)
 u_difference=unemployment-un 
 infl_difference=inflation-inflation_previous_period
 
-#linear regression summary and plotting
-model=summary(lm(inflation~u_difference+inflation_previous_period))
-ggPredict(lm(inflation~u_difference+inflation_previous_period)) #multiple regression plot for given values of infl(t-1)
-graph=ggplot(data=NULL,aes(x=u_difference,y=infl_difference))  
-graph+geom_point()
-graph+geom_point()+geom_smooth(method=lm, se=FALSE) #plot of regression between infl-infl(t-1) and ut-un
+#We have then regressed inflation over u_difference and the inflation of the previous period
+model=lm(inflation~u_difference+inflation_previous_period)
+(summary(model))
+
+#multiple regression plot for given values of inflation_previous_period so to see how close possible regression lines are to
+#data points
+ggPredict(lm(inflation~u_difference+inflation_previous_period),se=TRUE,interactive=TRUE) 
 
 
-res=residuals(model)
-res2=sum(res**2)
-variance=res2/(21-3)
+#We have then plotted the regression between the difference in inflation and u_difference 
+#(we have used the difference in inflation rather than the inflation alone (as we did for the model), in order
+#to have a 2-D plot)
+graph=ggplot(data=NULL,aes(x=u_difference,y=infl_difference))
+graph+geom_point()+geom_smooth(method=lm, se=FALSE) 
+
+
+#Then we have estimated the variance
+(res=residuals(model))
+(res2=sum(res**2))
+(variance=res2/(21-3))
 
 
 
