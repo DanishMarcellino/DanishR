@@ -44,8 +44,7 @@ gqtest(model, order.by=inflation_previous_period)
 bptest(model, studentize = FALSE)
 
 # Error correlation tests:
-bgtest(model, order.by=unemployment)
-bgtest(model, order.by=inflation_previous_period)
+bgtest(model, order=3)
 
 # zero mean of residuals
 mean(res)
