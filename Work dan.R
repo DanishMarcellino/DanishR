@@ -5,7 +5,7 @@ library(OECD)
 library(ggplot2)
 library(lmtest)
 library(ggiraphExtra)
-
+library(tseries)
 
 #get data from OECD library
 inflation_data=get_dataset("KEI", filter="CP+CPALTT01.DNK.GP.A", start_time=1998, end_time=(2019))
@@ -73,16 +73,14 @@ bptest(model)
 
 #As we can see from the following calculation the mean of the residuals is approximately zero, which is 
 #correct for the OLS model
-(residuals<-resid(model))
-(mean(residuals))
+(mean(res))
 
 # Error correlation tests:
+bgtest(model,order=3)
 
-#The Durbin Watson test has the null hypothesis (H0) that the autocorrelation of the residuals is 0,
-#therefore we used it to test whether the assumption of uncorrelation of the errors is respected or not.
-#given that the p-value of the test is 0.522 we can conclude that with a high confidence H0 is not rejected
-#and so errors are indeed uncorrelated
-dwtest(model)
+#test for normality
+jarque.bera.test(res)
+
 
 # Test for linearity:
 
