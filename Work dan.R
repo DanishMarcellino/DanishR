@@ -7,6 +7,7 @@ library(lmtest)
 library(ggiraphExtra)
 library(tseries)
 library(mctest)
+library(scatterplot3d)
 
 #get data from OECD library
 inflation_data=get_dataset("KEI", filter="CP+CPALTT01.DNK.GP.A", start_time=1998, end_time=(2019))
@@ -37,19 +38,22 @@ model=lm(inflation~u_difference+inflation_previous_period)
 #data points
 ggPredict(lm(inflation~u_difference+inflation_previous_period),se=TRUE,interactive=TRUE) 
 
-
-#We have then plotted the regression between the difference in inflation and u_difference 
-#(we have used the difference in inflation rather than the inflation alone (as we did for the model), in order
-#to have a 2-D plot)
-graph=ggplot(data=NULL,aes(x=u_difference,y=infl_difference))
-graph+geom_point()+geom_smooth(method=lm, se=FALSE) 
-
+#3D plot of the regression
+scatterplot3d(u_difference,inflation_previous_period,inflation)
+model_coefficients=coef(model)
+plot3d=scatterplot3d(u_difference,inflation_previous_period,inflation,angle=30,scale.inflation=0.7,pch=16,color='orange',main="Regression Plane")
+plot3d$plane3d(model,lty.box="solid",col='blue')
 
 #Then we have estimated the variance
 (res=residuals(model))
 (res2=sum(res**2))
-(variance=res2/(21-3))
+(variance_hat=res2/(21-3))
 
+#then we plotted the fitted and the real values for inflation so to understand the goodness of the model
+y_hat <- fitted(model)
+plot(inflation, type='l',main="Actual,Fitted and Residuals",asp=1.2)
+lines(y_hat, col='green')
+lines(res,col='orange')
 
 
 #To check whether our assumptions about the linear regression model were respected we decided to run some test.
@@ -62,7 +66,8 @@ graph+geom_point()+geom_smooth(method=lm, se=FALSE)
 #and rejects if the variances differ. In our case we called the test on our model obtained through the 
 #linear regression and we got a p-value of 0.3736, meaning that the hypothesis that the variance is 
 #homoscedastic is not rejected with a very high confidence.
-gqtest(model)
+gqtest(model, order.by=u_difference)
+gqtest(model, order.by=inflation_previous_period)
 
 # The Studentized Breusch-Pagan test fits a linear regression model to the residuals of a linear regression 
 #model and rejects if too much of the variance is explained by the additional explanatory variables. 
