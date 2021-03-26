@@ -6,7 +6,6 @@ library(ggplot2)
 library(lmtest)
 library(ggiraphExtra)
 library(tseries)
-library(mctest)
 
 #get data from OECD library
 inflation_data=get_dataset("KEI", filter="CP+CPALTT01.DNK.GP.A", start_time=1998, end_time=(2019))
@@ -68,7 +67,8 @@ gqtest(model)
 #model and rejects if too much of the variance is explained by the additional explanatory variables. 
 #So also this test was useful to understand whether or not homoscedasticity was respected also by the error term. 
 #In this case we got a p-value of 0.2126 so we can conclude that variances are indeed homoscedastic. 
-bptest(model)
+bptest(model, studentize=FALSE)
+
 
 #Is residuals mean equal zero?
 
